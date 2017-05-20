@@ -26,8 +26,8 @@
 
         <script>
 
-        var w = 600;
-        var h = 250;
+        var w = 900;
+        var h = 450;
 
         var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
                     11, 12, 15, 20, 18, 17, 16, 18, 23, 25, 12, 22, 33, 40 ];
@@ -84,18 +84,50 @@
             .attr("font-size", "11px")
             .attr("fill", "white")
             .attr("text-anchor", "middle")
+        
+        // v4 Axes
+        var xAxis = d3.axisBottom(xScale);
+        var yAxis = d3.axisLeft(yScale);
+
+        // call axis after svg generated
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + (h - 20) + ")")
+            .call(d3.axisBottom(xScale));
+
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + 20 + ", 0)")
+            .call(d3.axisLeft(yScale));
 
 
 
         d3.select("button")
             .on("click", function() {
-                // Do something  on click
-               dataset = [ 11, 12, 15, 20, 18, 17, 16, 18, 23, 25,
-                5, 10, 13, 19, 21, 25, 22, 18, 15, 13 ];
+                //New values for dataset
+                var numValues = dataset.length; 
+                dataset = [];
+                for (var i = 0; i < numValues; i++) {
+                    //Count original length of dataset
+                        //Initialize empty array
+                    //Loop numValues times
+                    var newNumber = Math.floor(Math.random() * 41); //New random integer (0-24)
+                    dataset.push(newNumber); //Add new number to array 
+                }
+
+                var yScale = d3.scaleLinear()
+                       .domain([0, d3.max(dataset)])
+                       .range([0, h]);
 
               svg.selectAll("rect")
                  .data(dataset)
                  .transition()
+                 //.delay(250)
+                 .delay(function(d, i) {
+                    return i / dataset.length * 1500; 
+                 })
+                 .duration(950)
+                 .ease(d3.easeCubic)
                  .attr("y", function(d) {
                     return h - yScale(d);
                 })
@@ -103,12 +135,17 @@
                     return yScale(d);
                 })
                 .attr("fill", function(d) {
-                    return "rgb(0, 0, " + (d * 10) + ")";
+                    return "rgb(" + d * 10 + ", 132, 179)";
                 });
 
                 svg.selectAll("text")
                     .data(dataset)
                     .transition()
+                    //.delay(250) 
+                    .delay(function(d, i) {
+                        return i / dataset.length * 1500; 
+                    })
+                    .duration(1000)
                     .text(function(d) {
                         return d;
                     })

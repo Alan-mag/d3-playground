@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <style>
+            div.bar {
+                display: inline-block;
+                width: 20px;
+                height: 75px;
+                background-color: teal;
+                margin-right: 2px;
+            }
+        </style>
+        <h1>Chart</h1>
+        <!--<svg class="class"></svg>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js" charset="utf-8"></script>
+        <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+
+        <script>
+
+        var w = 500;
+        var h = 160;
+        var barPadding = 1;
+
+        var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+                    11, 12, 15, 20, 18, 17, 16, 18, 23, 25, 12, 22, 33, 40 ];
+
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+        svg.selectAll("rects")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attrs({        // v4 does a little differently than book - this is why I added addition script for support
+                x: function(d, i) { return i * (w / dataset.length); }, y: function(d) { return h - (d * 4); },
+                width: w / dataset.length - barPadding,
+                height: function(d) { return d * 4; },
+                fill: function(d) { return "rgb(80, 0, " + (d * 10) + ")"; } 
+            })
+
+
+        svg.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+            .text(function(d) {
+                return d;
+            })
+            .attr("x", function(d, i) {
+                return i * (w / dataset.length) + (w / dataset.length - barPadding) / 2;;
+            })
+            .attr("y", function(d) {
+                return h - (d * 4) + 15;
+            })
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "11px")
+            .attr("fill", "white")
+            .attr("text-anchor", "middle")
+
+
+        
+
+        </script>
+    </body>
+</html>
